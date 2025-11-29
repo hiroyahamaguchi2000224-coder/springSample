@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ja" th:replace="layout/main :: layout">
+    <head>
+        <title th:fragment="title">VA機能 - VA0101</title>
+    </head>
+    <body>
+        <div th:fragment="content">
+            <section class="page-header">
+                <h1>VA0101 - VA機能</h1>
+            </section>
+
+            <div class="container">
+                <div class="content-box">
+                    <h2>VA0101処理画面</h2>
+
+                    <div th:if="${error}" class="error-message">
+                        <p th:text="${error}"></p>
+                    </div>
+
+                    <div th:if="${message}" class="message">
+                        <p th:text="${message}"></p>
+                    </div>
+
+                    <p style="color: #666; margin-bottom: 20px;">
+                        ユーザー: <strong th:text="${userName}"></strong>
+                    </p>
+
+                    <form th:action="@{/va0101/execute}" method="post" th:object="${vA0101Form}">
+                        <div class="form-group">
+                            <label for="parameter">パラメータ</label>
+                            <input type="text" id="parameter" th:field="*{parameter}" required placeholder="処理パラメータを入力してください">
+                        </div>
+
+                        <div class="button-group">
+                            <button type="submit">実行</button>
+                            <button type="reset">クリア</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>

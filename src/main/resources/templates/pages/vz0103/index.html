@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ja" th:replace="layout/main :: layout">
+  <head>
+    <title th:fragment="title">エラー - VZ0103</title>
+  </head>
+  <body>
+    <div th:fragment="content">
+      <section class="page-header">
+        <h1>エラー</h1>
+      </section>
+
+      <div class="container">
+        <div class="error-box">
+          <div class="error-header">
+            <h2>⚠ エラーが発生しました</h2>
+            <p th:text="'エラーコード: ' + ${error.errorCode}" class="error-code"></p>
+          </div>
+
+          <div class="error-body">
+            <div class="error-detail">
+              <strong>エラーメッセージ:</strong>
+              <p class="error-message" th:text="${error.errorMessage}"></p>
+            </div>
+
+            <div class="error-detail">
+              <strong>リクエストパス:</strong>
+              <p th:text="${error.requestUri}"></p>
+            </div>
+
+            <div class="error-detail">
+              <strong>発生時刻:</strong>
+              <p class="error-time" th:text="${#temporals.format(error.timestamp, 'yyyy-MM-dd HH:mm:ss')}"></p>
+            </div>
+
+            <div th:if="${detailMessage}" class="detail-message">
+              <strong>詳細:</strong>
+              <p th:text="${detailMessage}"></p>
+            </div>
+
+            <div class="button-group">
+              <a th:href="@{/vz0101}" class="btn-menu">ログインに戻る</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

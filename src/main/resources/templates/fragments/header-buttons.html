@@ -1,0 +1,7 @@
+<div xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security" th:fragment="headerButtons">
+  <!-- 認証済みユーザーのみ表示 -->
+  <div sec:authorize="isAuthenticated()" class="header-buttons">
+    <a th:href="@{/vz0102}" class="btn-menu">メニューに戻る</a>
+    <a th:href="@{/logout}" class="btn-logout">ログアウト</a>
+  </div>
+</div>

@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ja" th:fragment="layout">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title th:replace="~{::title}">共通レイアウト</title>
+  <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+  <!-- ヘッダー部品 -->
+  <div th:replace="fragments/header :: header"></div>
+
+  <!-- メッセージエリア部品 -->
+  <div th:replace="fragments/message :: message"></div>
+
+  <!-- 各画面のコンテンツをここに差し込む -->
+  <main>
+    <div th:insert="~{::content}"></div>
+  </main>
+</body>
+</html>

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.sample.mapper.MenuMapper">
+
+    <!-- メニューを表示順で取得 -->
+    <select id="findAllOrdered" resultType="com.example.sample.entity.Menu">
+        SELECT
+            id,
+            screen_id AS screenId,
+            screen_name AS screenName,
+            button_name AS buttonName,
+            display_order AS displayOrder
+        FROM
+            menu
+        ORDER BY
+            display_order
+    </select>
+
+</mapper>
