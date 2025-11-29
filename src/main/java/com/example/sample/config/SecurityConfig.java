@@ -1,8 +1,5 @@
 package com.example.sample.config;
 
-import com.example.sample.controller.vz0101.VZ0101Controller;
-import com.example.sample.service.LoginService;
-import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -10,6 +7,11 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+
+import com.example.sample.controller.vz0101.VZ0101Controller;
+import com.example.sample.service.LoginService;
+
+import lombok.RequiredArgsConstructor;
 
 /**
  * セキュリティ設定クラス。
@@ -25,7 +27,7 @@ public class SecurityConfig {
         private final LoginService loginService;
 
     @Bean
-    public PasswordEncoder passwordEncoder() {
+    PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
@@ -37,7 +39,7 @@ public class SecurityConfig {
      * @return 設定済みの `SecurityFilterChain`
      * @throws Exception セキュリティ設定の構築に失敗した場合
      */
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+     SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests(authz -> authz
                         // ルートパス
