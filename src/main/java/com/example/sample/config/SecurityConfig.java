@@ -25,11 +25,10 @@ public class SecurityConfig {
         private final LoginService loginService;
 
     @Bean
-    public PasswordEncoder passwordEncoder() {
+    PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
-    @Bean
     /**
      * セキュリティフィルタチェーンを構築する。
      *
@@ -37,7 +36,8 @@ public class SecurityConfig {
      * @return 設定済みの `SecurityFilterChain`
      * @throws Exception セキュリティ設定の構築に失敗した場合
      */
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    @Bean
+    SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests(authz -> authz
                         // ルートパス
