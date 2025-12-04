@@ -1,94 +1,133 @@
 package com.example.sample.controller.vb0101;
 
-import com.example.sample.service.VB0101Service;
-import com.example.sample.exception.ServiceException;
-import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 
-import jakarta.servlet.http.HttpSession;
+import com.example.sample.controller.vz0102.VZ0102Controller;
+import com.example.sample.token.ActivateToken;
+
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 /**
- * VB0101 VB機能画面コントローラ
+ * VB0101 VB業務処理画面 Controller
+ * 画面説明などは日本語で記載し、用語は英語（Controller/Service/Form）を使用
  */
+@Slf4j
 @Controller
 @RequestMapping(VB0101Controller.PATH)
 @RequiredArgsConstructor
 public class VB0101Controller {
-    /** ベースパス */
+    /** コントローラのベースパス */
     public static final String PATH = "/vb0101";
-    /** ビュー名 */
-    public static final String VIEW = "pages/vb0101/index";
+    /** 表示するテンプレート名 */
+    private static final String VIEW = "pages" + PATH + "/index";
     /** 自画面へのリダイレクト定数（外部から参照可能） */
     public static final String REDIRECT = "redirect:" + PATH;
-    /** 処理実行アクション */
-    public static final String ACTION_EXECUTE = "/execute";
+    /** フォーム名定数（ModelAttributeとHTMLで統一） */
+    public static final String FORM = "vb0101Form";
 
-    private final VB0101Service vb0101Service;
     
     /**
-     * VB0101画面の表示
+     * VB0101 VB業務処理画面 初期表示
+     * VB業務処理画面を表示する
      *
-     * @param model ビューへ渡すモデル
-     * @param session HTTP セッション（ユーザー情報参照）
-     * @return 表示するテンプレート名またはリダイレクト
+     * @param form VB業務処理 Form（Spring が自動的に Model に追加）
+     * @return 表示するテンプレート名
      */
     @GetMapping
-    public String show(Model model, HttpSession session) {
-        String userName = (String) session.getAttribute("userName");
+    @ActivateToken(type = ActivateToken.TokenType.CREATE)
+    public String init(@ModelAttribute(FORM) VB0101Form form) {
         
-        if (userName == null) {
-            return REDIRECT;
-        }
+        // ログインユーザー名を取得
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String userName = auth.getName();
         
-        model.addAttribute("userName", userName);
-        model.addAttribute("vB0101Form", new VB0101Form());
+        // Formに設定
+        form.setUserName(userName);
+        
         return VIEW;
     }
-    
+
     /**
-     * VB0101の処理実行
+     * VB0101 VB業務処理画面 検索
+     * 検索条件に基づいてデータを検索する
      *
-     * @param form フォーム入力
-     * @param model ビューへ渡すモデル
-     * @param session HTTP セッション
-     * @return 表示するテンプレート名またはリダイレクト
+     * @param form VB業務処理 Form（Spring が自動的に Model に追加）
+     * @return 表示するテンプレート名
      */
-    @PostMapping(ACTION_EXECUTE)
-    public String execute(VB0101Form form, Model model, HttpSession session) {
-        String userName = (String) session.getAttribute("userName");
+    @PostMapping("/search")
+    @ActivateToken(type = ActivateToken.TokenType.VALIDATE)
+    public String search(VB0101Form form) {
         
-        if (userName == null) {
-            return REDIRECT;
-        }
+        // ログインユーザー名を取得
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String userName = auth.getName();
+
+        // ログインユーザ名の画面表示
+        form.setParameter(userName);
         
-        // サービスでビジネスロジック実行（例外があればexecuteHandlerで処理）
-        vb0101Service.executeVB(form.getParameter());
-        
-        model.addAttribute("userName", userName);
-        model.addAttribute("message", "VB0101処理が完了しました。");
-        model.addAttribute("vB0101Form", new VB0101Form());
         return VIEW;
     }
-    
+
     /**
-     * VB0101画面内での `ServiceException` を処理する。
+     * VB0101 VB業務処理画面 選択
+     * 一覧から項目を選択する
      *
-     * @param e 発生した `ServiceException`
-     * @param model ビューへ渡すモデル
-     * @param session HTTP セッション
-     * @return VB0101画面のテンプレート名（エラーメッセージ付き）
+     * @param form VB業務処理 Form（Spring が自動的に Model に追加）
+     * @return 表示するテンプレート名
      */
-    @ExceptionHandler(ServiceException.class)
-    public String handleServiceException(ServiceException e, Model model, HttpSession session) {
-        String userName = (String) session.getAttribute("userName");
-        model.addAttribute("userName", userName);
-        model.addAttribute("error", e.getMessage());
-        model.addAttribute("vB0101Form", new VB0101Form());
+    @PostMapping("/select")
+    @ActivateToken(type = ActivateToken.TokenType.VALIDATE)
+    public String select(VB0101Form form) {
+        
+        // ログインユーザー名を取得
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String userName = auth.getName();
+
+        // ログインユーザ名の画面表示
+        form.setParameter(userName);
+        
+        return VZ0102Controller.REDIRECT;
+    }
+
+    /**
+     * VB0101 VB業務処理画面 実行処理
+     * 
+     * @param form VB業務処理 Form（Spring が自動的に Model に追加）
+     * @param model ビューへ渡すモデル（メッセージ表示に使用）
+     * @return 表示するテンプレート名
+     */
+    @PostMapping("/execute")
+    @ActivateToken(type = ActivateToken.TokenType.VALIDATE)
+    public String execute(VB0101Form form, Model model) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String userName = auth.getName();
+        
+        // Formに設定
+        form.setUserName(userName);
+        
+        // メッセージはメッセージクラス経由の表示なのでそのまま
+        model.addAttribute("message", "実行処理は未実装です");
         return VIEW;
     }
+
+    /**
+     * VB0101 VB業務処理画面 クリア処理
+     * 
+     * @param form VB業務処理 Form（Spring が自動的に Model に追加）
+     * @return リダイレクト先
+     */
+    @PostMapping("/clear")
+    @ActivateToken(type = ActivateToken.TokenType.VALIDATE)
+    public String clear(VB0101Form form) {
+        return REDIRECT;
+    }
+
 }

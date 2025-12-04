@@ -1,5 +1,6 @@
 <div xmlns:th="http://www.thymeleaf.org" th:fragment="message">
-  <div class="message-area">
-    <p th:text="${message}">ここにメッセージが入ります</p>
+  <div th:if="${message}" class="alert alert-info alert-dismissible fade show" role="alert">
+    <span th:text="${message}">ここにメッセージが入ります</span>
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
   </div>
 </div>

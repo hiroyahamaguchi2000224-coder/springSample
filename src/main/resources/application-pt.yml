@@ -1,31 +1,65 @@
-spring:
-  datasource:
-    url: jdbc:h2:mem:testdb
-    driver-class-name: org.h2.Driver
-    username: sa
-    password: ""
+# ========================================
+# Spring Boot アプリケーション設定 (PT環境)
+# ========================================
 
+spring:
+  # Bean定義の上書きを許可（独自のRequestDataValueProcessorでSpring標準を上書き）
+  main:
+    allow-bean-definition-overriding: true
+
+  # データソース設定(PostgreSQL)
+  datasource:
+    url: jdbc:postgresql://127.0.0.1:5432/postgres
+    driver-class-name: org.postgresql.Driver
+    username: ${SPRING_DATASOURCE_USERNAME:postgres}
+    password: ${SPRING_DATASOURCE_PASSWORD:postgres}
+
+  # JPA/Hibernate設定
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    show-sql: true  # 実行されるSQLをログ出力
+    properties:
+      hibernate:
+        "[format_sql]": true  # SQLを整形して表示
+        "[use_sql_comments]": true  # SQLにコメント追加
+    hibernate:
+      ddl-auto: none  # スキーマ自動生成無効（schema.sqlを使用）
+
+  # データベース初期化設定（既存のPostgreSQLを使用するため無効化）
   sql:
     init:
-      mode: always
-      schema-locations: classpath:schema.sql
-      data-locations: classpath:data.sql
+      mode: never  # DB初期化スクリプトを実行しない
 
-  h2:
-    console:
-      enabled: true
-      path: /h2-console
+  # Webリソース設定
+  web:
+    resources:
+      add-mappings: true  # 静的リソース（CSS、JS等）のマッピングを有効化
+  
+  # Spring MVC設定
+  mvc:
+    log-resolved-exception: false  # 解決済み例外のログ出力を無効化（favicon等の無害なエラーを抑制）
 
+# ========================================
+# MyBatis設定
+# ========================================
 mybatis:
-  mapper-locations: classpath:mapper/*.xml
-  type-aliases-package: com.example.sample.entity
+  mapper-locations: classpath:mapper/*.xml  # XMLマッパーファイルの場所
+  type-aliases-package: com.example.sample.entity  # エンティティクラスのパッケージ（エイリアス自動生成）
   configuration:
-    map-underscore-to-camel-case: true
+    map-underscore-to-camel-case: true  # データベースのsnake_caseをJavaのcamelCaseに自動変換
 
+# ========================================
+# サーバー設定
+# ========================================
 server:
-  port: 8080
+  port: 8080  # アプリケーションのポート番号
 
+# ========================================
+# ログレベル設定
+# ========================================
 logging:
   level:
-    "[com.example.sample]": DEBUG
-    "[com.example.sample.mapper]": TRACE
+    "[com.example.sample]": DEBUG  # アプリケーション全体のログレベル
+    "[com.example.sample.mapper]": TRACE  # MyBatisマッパーの詳細ログ（SQL実行内容等）
+    "[org.springframework.security]": DEBUG  # Spring Security認証・認可のデバッグログ
+    "[org.springframework.web]": DEBUG  # Spring MVC（リクエスト処理等）のデバッグログ

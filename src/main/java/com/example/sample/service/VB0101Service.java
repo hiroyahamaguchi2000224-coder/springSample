@@ -1,12 +1,21 @@
 package com.example.sample.service;
 
-import com.example.sample.exception.ServiceException;
+import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
 
+import com.example.sample.exception.ServiceException;
+
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @Service
+@RequiredArgsConstructor
 public class VB0101Service {
+    private final MessageSource messageSource;
+    
     /**
-     * VB0101 用の業務ロジックを提供するサービスクラス。
+     * VB0101 用の業務ロジックを提供する Service クラス。
      */
     
     /**
@@ -17,10 +26,11 @@ public class VB0101Service {
      */
     public void executeVB(String parameter) {
         if (parameter == null || parameter.isEmpty()) {
-            throw new ServiceException("VB001", "パラメータが不正です。");
+            String message = messageSource.getMessage("E_VB0101_001", null, null);
+            throw new ServiceException("E_VB0101_001", message);
         }
         
         // VB0101の具体的な処理をここに実装
-        System.out.println("VB0101処理実行: " + parameter);
+        log.info("VB0101処理実行: {}", parameter);
     }
 }

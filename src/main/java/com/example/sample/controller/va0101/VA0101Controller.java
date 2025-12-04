@@ -1,94 +1,85 @@
 package com.example.sample.controller.va0101;
 
-import com.example.sample.service.VA0101Service;
-import com.example.sample.exception.ServiceException;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 
-import jakarta.servlet.http.HttpSession;
+import com.example.sample.token.ActivateToken;
+
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 /**
- * VA0101 VA機能画面コントローラ
+ * VA0101 商品検索画面 Controller
+ * 画面説明などは日本語で記載し、用語は英語（Controller/Service/Form）を使用
  */
+@Slf4j
 @Controller
 @RequestMapping(VA0101Controller.PATH)
 @RequiredArgsConstructor
 public class VA0101Controller {
     /** コントローラのベースパス */
     public static final String PATH = "/va0101";
-    /** このコントローラが返すビュー名 */
-    public static final String VIEW = "pages/va0101/index";
+    /** 表示するテンプレート名 */
+    private static final String VIEW = "pages" + PATH + "/index";
     /** 自画面へのリダイレクト定数（外部から参照可能） */
     public static final String REDIRECT = "redirect:" + PATH;
-    /** 処理実行アクション */
-    public static final String ACTION_EXECUTE = "/execute";
+    /** フォーム名定数（ModelAttributeとHTMLで統一） */
+    public static final String FORM = "va0101Form";
 
-    private final VA0101Service va0101Service;
-    
     /**
-     * VA0101画面の表示
+     * VA0101 商品検索画面 初期表示
+     * 商品検索画面を表示する（初期表示時は検索結果なし）
      *
-     * @param model ビューへ渡すモデル
-     * @param session HTTP セッション（ユーザー情報参照）
-     * @return 表示するテンプレート名またはリダイレクト
+     * @param form 商品検索 Form（Spring が自動的に Model に追加）
+     * @return 表示するテンプレート名
      */
     @GetMapping
-    public String show(Model model, HttpSession session) {
-        String userName = (String) session.getAttribute("userName");
-        
-        if (userName == null) {
-            return REDIRECT;
-        }
-        
-        model.addAttribute("userName", userName);
-        model.addAttribute("vA0101Form", new VA0101Form());
+    @ActivateToken(type = ActivateToken.TokenType.CREATE)
+    public String init(@ModelAttribute(FORM) VA0101Form form) {
         return VIEW;
     }
-    
+
     /**
-     * VA0101の処理実行
-     *
-     * @param form フォーム入力
-     * @param model ビューへ渡すモデル
-     * @param session HTTP セッション
-     * @return 表示するテンプレート名またはリダイレクト
+     * VA0101 商品検索画面 検索処理
+     * 
+     * @param form 商品検索 Form（Spring が自動的に Model に追加）
+     * @param model ビューへ渡すモデル（メッセージ表示に使用）
+     * @return 表示するテンプレート名
      */
-    @PostMapping(ACTION_EXECUTE)
-    public String execute(VA0101Form form, Model model, HttpSession session) {
-        String userName = (String) session.getAttribute("userName");
-        
-        if (userName == null) {
-            return REDIRECT;
-        }
-        
-        // サービスでビジネスロジック実行（例外があればexecuteHandlerで処理）
-        va0101Service.executeVA(form.getParameter());
-        
-        model.addAttribute("userName", userName);
-        model.addAttribute("message", "VA0101処理が完了しました。");
-        model.addAttribute("vA0101Form", new VA0101Form());
+    @PostMapping("/search")
+    @ActivateToken(type = ActivateToken.TokenType.VALIDATE)
+    public String search(VA0101Form form, Model model) {
+        model.addAttribute("message", "検索処理は未実装です");
         return VIEW;
     }
-    
+
     /**
-     * VA0101画面内での `ServiceException` を処理する。
-     *
-     * @param e 発生した `ServiceException`
-     * @param model ビューへ渡すモデル
-     * @param session HTTP セッション
-     * @return VA0101画面のテンプレート名（エラーメッセージ付き）
+     * VA0101 商品検索画面 クリア処理
+     * 
+     * @param form 商品検索 Form（Spring が自動的に Model に追加）
+     * @return リダイレクト先
      */
-    @ExceptionHandler(ServiceException.class)
-    public String handleServiceException(ServiceException e, Model model, HttpSession session) {
-        String userName = (String) session.getAttribute("userName");
-        model.addAttribute("userName", userName);
-        model.addAttribute("error", e.getMessage());
-        model.addAttribute("vA0101Form", new VA0101Form());
+    @PostMapping("/clear")
+    @ActivateToken(type = ActivateToken.TokenType.VALIDATE)
+    public String clear(VA0101Form form) {
+        return REDIRECT;
+    }
+
+    /**
+     * VA0101 商品検索画面 カート追加処理
+     * 
+     * @param form 商品検索 Form（Spring が自動的に Model に追加）
+     * @param model ビューへ渡すモデル（メッセージ表示に使用）
+     * @return 表示するテンプレート名
+     */
+    @PostMapping("/addToCart")
+    @ActivateToken(type = ActivateToken.TokenType.VALIDATE)
+    public String addToCart(VA0101Form form, Model model) {
+        model.addAttribute("message", "カート追加処理は未実装です");
         return VIEW;
     }
 }

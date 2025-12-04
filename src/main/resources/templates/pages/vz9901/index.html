@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/main}" lang="ja">
+<head>
+  <title>ドライバ画面 - VZ9901</title>
+</head>
+<body>
+  <div layout:fragment="content">
+    
+    <!-- 1画面1フォーム: 全体をフォームで囲む -->
+    <form id="vz9901Form" th:object="${vz9901Form}" method="post" th:action="@{/vz9901}">
+      <div class="container mt-4" style="max-width: 1200px;">
+        <div class="mb-4">
+          <h2 class="mb-2">🚗 ドライバ画面</h2>
+          <p class="text-muted">開発・テスト用の全画面リンク集</p>
+        </div>
+        
+        <div class="row g-4">
+          <!-- VZ: 共通機能 -->
+          <div class="col-md-4">
+            <div class="card h-100">
+              <div class="card-body">
+                <h5 class="card-title">VZ: 共通機能</h5>
+                <p class="card-text">ログイン、メニュー、エラー画面など</p>
+                
+                <div class="d-grid gap-2">
+                  <button type="submit" class="btn btn-primary w-100 text-start p-3" 
+                          th:formaction="@{/vz9901/selectVz0101}">
+                    <div class="fw-bold">VZ0101 - ログイン画面</div>
+                    <small class="text-white-50">ログイン認証</small>
+                  </button>
+                  <button type="submit" class="btn btn-primary w-100 text-start p-3" 
+                          th:formaction="@{/vz9901/selectVz0102}">
+                    <div class="fw-bold">VZ0102 - メニュー画面</div>
+                    <small class="text-white-50">メインメニュー</small>
+                  </button>
+                  <button type="submit" class="btn btn-primary w-100 text-start p-3" 
+                          th:formaction="@{/vz9901/selectVz0103}">
+                    <div class="fw-bold">VZ0103 - エラー画面</div>
+                    <small class="text-white-50">エラー表示</small>
+                  </button>
+                  <button type="submit" class="btn btn-secondary w-100 text-start p-3" 
+                          th:formaction="@{/vz9901/selectVz9901}">
+                    <div class="fw-bold">VZ9901 - ドライバ画面</div>
+                    <small class="text-white-50">このページ</small>
+                  </button>
+                  <button type="submit" class="btn btn-secondary w-100 text-start p-3" 
+                          th:formaction="@{/vz9901/selectVz9902}">
+                    <div class="fw-bold">VZ9902 - モックアップ画面</div>
+                    <small class="text-white-50">デバッグ情報</small>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <!-- VA: 購買機能 -->
+          <div class="col-md-4">
+            <div class="card h-100">
+              <div class="card-body">
+                <h5 class="card-title">VA: 購買機能</h5>
+                <p class="card-text">商品検索・詳細・カート機能</p>
+                
+                <div class="d-grid gap-2">
+                  <button type="submit" class="btn btn-success w-100 text-start p-3" 
+                          th:formaction="@{/vz9901/selectVa0101}">
+                    <div class="fw-bold">VA0101 - 商品検索画面</div>
+                    <small class="text-white-50">商品検索・カート追加</small>
+                  </button>
+                  <button type="submit" class="btn btn-success w-100 text-start p-3" 
+                          th:formaction="@{/vz9901/selectVa0102}">
+                    <div class="fw-bold">VA0102 - 商品詳細画面</div>
+                    <small class="text-white-50">商品詳細表示</small>
+                  </button>
+                  <button type="submit" class="btn btn-success w-100 text-start p-3" 
+                          th:formaction="@{/vz9901/selectVa0103}">
+                    <div class="fw-bold">VA0103 - カート画面</div>
+                    <small class="text-white-50">カート管理</small>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <!-- VB: サンプル機能 -->
+          <div class="col-md-4">
+            <div class="card h-100">
+              <div class="card-body">
+                <h5 class="card-title">VB: サンプル機能</h5>
+                <p class="card-text">サンプル業務機能</p>
+                
+                <div class="d-grid gap-2">
+                  <button type="submit" class="btn btn-info w-100 text-start p-3" 
+                          th:formaction="@{/vz9901/selectVb0101}">
+                    <div class="fw-bold">VB0101 - VB機能画面</div>
+                    <small class="text-white-50">サンプル機能</small>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- 開発ツール -->
+        <div class="row g-4 mt-3">
+          <div class="col-md-4">
+            <div class="card h-100 border-danger">
+              <div class="card-body">
+                <h5 class="card-title text-danger">🔧 開発ツール</h5>
+                <p class="card-text">システム操作</p>
+                
+                <div class="d-grid gap-2">
+                  <button type="submit" class="btn btn-danger w-100" 
+                          th:formaction="@{/logout}">ログアウト</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+</body>
+</html>

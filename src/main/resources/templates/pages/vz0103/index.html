@@ -1,48 +1,85 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="ja" th:replace="layout/main :: layout">
-  <head>
-    <title th:fragment="title">エラー - VZ0103</title>
-  </head>
-  <body>
-    <div th:fragment="content">
-      <section class="page-header">
-        <h1>エラー</h1>
-      </section>
-
-      <div class="container">
-        <div class="error-box">
-          <div class="error-header">
-            <h2>⚠ エラーが発生しました</h2>
-            <p th:text="'エラーコード: ' + ${error.errorCode}" class="error-code"></p>
-          </div>
-
-          <div class="error-body">
-            <div class="error-detail">
-              <strong>エラーメッセージ:</strong>
-              <p class="error-message" th:text="${error.errorMessage}"></p>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/main}" lang="ja">
+<head>
+  <title>システムエラー - VZ0103</title>
+</head>
+<body>
+  <div layout:fragment="content">
+    <!-- 
+      Bootstrap レイアウトクラス:
+      - container: レスポンシブな固定幅コンテナ
+      - mt-5: margin-top を 3rem 追加
+      - row: 横並びカラムを含む行
+      - justify-content-center: 水平方向中央揃え
+      - col-md-8: 中型画面で幅66.6%
+      - col-lg-6: 大型画面で幅50%
+    -->
+    <div class="container mt-5">
+      <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+          <!-- 
+            エラーカード:
+            - card: カード型コンテナ
+            - border-danger: ボーダー色を赤（危険色）に設定
+            - card-header: カードヘッダー部分
+            - bg-danger: 背景色を赤に設定
+            - text-white: テキスト色を白に設定
+            - text-center: テキストを中央揃え
+          -->
+          <div class="card border-danger">
+            <div class="card-header bg-danger text-white text-center">
+              <h3 class="mb-0">⚠️ システムエラーが発生しました</h3>
             </div>
+            <!-- 
+              カードボディ:
+              - card-body: カードの本体部分
+              - p-4: padding を 1.5rem（全方向）追加
+            -->
+            <div class="card-body p-4">
+              <!-- 
+                アラートコンポーネント:
+                - alert: アラートボックスの基本スタイル
+                - alert-danger: エラーメッセージ用の赤色スタイル
+                - alert-heading: アラート内の見出し用スタイル
+                - alert-light: 明るい背景色のアラート
+                - border: ボーダーを追加
+              -->
+              <div class="alert alert-danger" role="alert">
+                <h5 class="alert-heading">エラー内容</h5>
+                <p th:if="${message}" th:text="${message}" class="mb-2">申し訳ございません。予期しないエラーが発生しました。</p>
+                <p th:unless="${message}" class="mb-2">申し訳ございません。予期しないエラーが発生しました。</p>
+                <hr>
+                <p th:if="${errorScreen}" class="mb-0"><small><strong>発生画面:</strong> <span th:text="${errorScreen}"></span></small></p>
+              </div>
+              
+              <div class="alert alert-light border mb-3" role="alert">
+                <p class="mb-2"><strong>💡 次のアクションをお試しください：</strong></p>
+                <ul class="mb-0">
+                  <li>一度ログアウトして、再度ログインしてください</li>
+                  <li>問題が解決しない場合は、システム管理者にお問い合わせください</li>
+                </ul>
+              </div>
 
-            <div class="error-detail">
-              <strong>リクエストパス:</strong>
-              <p th:text="${error.requestUri}"></p>
-            </div>
-
-            <div class="error-detail">
-              <strong>発生時刻:</strong>
-              <p class="error-time" th:text="${#temporals.format(error.timestamp, 'yyyy-MM-dd HH:mm:ss')}"></p>
-            </div>
-
-            <div th:if="${detailMessage}" class="detail-message">
-              <strong>詳細:</strong>
-              <p th:text="${detailMessage}"></p>
-            </div>
-
-            <div class="button-group">
-              <a th:href="@{/vz0101}" class="btn-menu">ログインに戻る</a>
+              <!-- 
+                ボタン配置:
+                - text-center: テキストを中央揃え
+                - d-inline: display: inline を適用（フォームをインライン表示）
+                - btn: ボタンの基本スタイル
+                - btn-danger: 危険色（赤）のボタン
+                - btn-lg: 大きめのボタンサイズ
+              -->
+              <div class="text-center">
+                <form id="vz0103Form" th:object="${vz0103Form}" method="post" th:action="@{/}" class="d-inline">
+                  <button type="submit" class="btn btn-danger btn-lg" th:formaction="@{/logout}">🚪 ログアウト</button>
+                </form>
+              </div>
             </div>
           </div>
         </div>
       </div>
     </div>
-  </body>
+  </div>
+</body>
 </html>

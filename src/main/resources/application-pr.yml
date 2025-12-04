@@ -1,4 +1,8 @@
 spring:
+  # Bean定義の上書きを許可（独自のRequestDataValueProcessorでSpring標準を上書き）
+  main:
+    allow-bean-definition-overriding: true
+
   datasource:
     url: jdbc:mysql://localhost:3306/sample_prod
     driver-class-name: com.mysql.cj.jdbc.Driver

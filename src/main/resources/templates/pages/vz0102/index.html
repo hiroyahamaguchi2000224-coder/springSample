@@ -1,36 +1,76 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="ja" th:replace="layout/main :: layout">
-  <head>
-    <title th:fragment="title">メニュー - VZ0102</title>
-  </head>
-  <body>
-    <div th:fragment="content">
-      <section class="page-header">
-        <h1>メニュー</h1>
-        <div class="user-info">
-          <p th:text="'ようこそ、' + ${userName} + 'さん'"></p>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/main}" lang="ja">
+<head>
+  <title>メニュー - VZ0102</title>
+</head>
+<body>
+  <div layout:fragment="content">
+    <!-- 1画面1フォーム: 全体をフォームで囲む -->
+    <form id="vz0102Form" th:object="${vz0102Form}" method="post" th:action="@{/vz0102}">
+      <!-- コンテナ: 最大幅制限と中央配置 -->
+      <div class="container" style="max-width: 1200px;">
+        <div class="my-4">
+          <h1 class="mb-3">📋 メインメニュー</h1>
+          <p class="lead" th:text="'ようこそ、' + *{userName} + ' さん'"></p>
+          <p class="text-muted">実行する業務をお選びください。</p>
         </div>
-      </section>
-
-      <div class="container">
-        <div th:if="${error}" class="error-message">
-          <p th:text="${error}"></p>
-        </div>
-
-        <div class="menu-grid">
-          <div th:each="menu : ${menus}" class="menu-card">
-            <div class="menu-card-header">
-              <h3 th:text="${menu.screenName}"></h3>
+        
+        <div th:if="${error}" class="alert alert-danger" role="alert" th:text="${error}"></div>
+        
+        <!-- 業務用メニュー -->
+        <div class="card border-0 shadow-sm mb-4">
+          <div class="card-body p-4 bg-light">
+            <h2 class="card-title border-bottom border-success border-3 pb-2 mb-4 text-dark">🏢 業務用メニュー</h2>
+            <!-- Bootstrapグリッドレイアウト -->
+            <div class="row g-3">
+              <div class="col-12 col-md-6 col-lg-4">
+                <button type="submit" 
+                        class="btn btn-primary w-100 text-start p-3"
+                        th:formaction="@{/vz0102/selectVa0101}">
+                  <div class="fw-bold">VA0101 - 商品検索</div>
+                  <small class="text-white-50">商品検索・カート追加</small>
+                </button>
+              </div>
+              <div class="col-12 col-md-6 col-lg-4">
+                <button type="submit" 
+                        class="btn btn-primary w-100 text-start p-3"
+                        th:formaction="@{/vz0102/selectVb0101}">
+                  <div class="fw-bold">VB0101 - VB業務処理</div>
+                  <small class="text-white-50">サンプル機能</small>
+                </button>
+              </div>
             </div>
-            <div class="menu-card-body">
-              <p th:text="'ID: ' + ${menu.screenId}"></p>
-              <a th:href="@{'/' + ${menu.screenId?lower_case}}"
-                 th:text="${menu.buttonName}"
-                 class="menu-card-button"></a>
+          </div>
+        </div>
+        
+        <!-- 管理用メニュー -->
+        <div class="card border-0 shadow-sm mb-4">
+          <div class="card-body p-4 bg-light">
+            <h2 class="card-title border-bottom border-primary border-3 pb-2 mb-4 text-dark">⚙️ 管理用メニュー</h2>
+            <div class="row g-3">
+              <div class="col-12 col-md-6 col-lg-4">
+                <button type="submit" 
+                        class="btn btn-primary w-100 text-start p-3"
+                        th:formaction="@{/vz0102/selectVz9901}">
+                  <div class="fw-bold">VZ9901 - ドライバ</div>
+                  <small class="text-white-50">全画面リンク集</small>
+                </button>
+              </div>
+              <div class="col-12 col-md-6 col-lg-4">
+                <button type="submit" 
+                        class="btn btn-primary w-100 text-start p-3"
+                        th:formaction="@{/vz0102/selectVz9902}">
+                  <div class="fw-bold">VZ9902 - モックアップ</div>
+                  <small class="text-white-50">デバッグ情報表示</small>
+                </button>
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
-  </body>
+    </form>
+  </div>
+</body>
 </html>

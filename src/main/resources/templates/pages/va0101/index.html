@@ -1,43 +1,119 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="ja" th:replace="layout/main :: layout">
-    <head>
-        <title th:fragment="title">VA機能 - VA0101</title>
-    </head>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/main}" lang="ja">
+<head>
+    <title>VA0101 - 商品検索</title>
+</head>
     <body>
-        <div th:fragment="content">
-            <section class="page-header">
-                <h1>VA0101 - VA機能</h1>
-            </section>
-
-            <div class="container">
-                <div class="content-box">
-                    <h2>VA0101処理画面</h2>
-
-                    <div th:if="${error}" class="error-message">
-                        <p th:text="${error}"></p>
-                    </div>
-
-                    <div th:if="${message}" class="message">
-                        <p th:text="${message}"></p>
-                    </div>
-
-                    <p style="color: #666; margin-bottom: 20px;">
-                        ユーザー: <strong th:text="${userName}"></strong>
-                    </p>
-
-                    <form th:action="@{/va0101/execute}" method="post" th:object="${vA0101Form}">
-                        <div class="form-group">
-                            <label for="parameter">パラメータ</label>
-                            <input type="text" id="parameter" th:field="*{parameter}" required placeholder="処理パラメータを入力してください">
-                        </div>
-
-                        <div class="button-group">
-                            <button type="submit">実行</button>
-                            <button type="reset">クリア</button>
-                        </div>
-                    </form>
+        <div layout:fragment="content">
+            <!-- 1画面1フォーム: 全体をフォームで囲む -->
+            <form id="va0101Form" th:object="${va0101Form}" method="post" th:action="@{/}">
+                <div class="mb-4">
+                    <h1 class="mb-2">🔍 商品検索</h1>
+                    <p class="text-muted">商品名または商品コードで商品を検索し、カートに追加できます。複数選択も可能です。</p>
                 </div>
-            </div>
+
+                <!-- メッセージ表示 -->
+                <div th:replace="~{fragments/message :: message}"></div>
+
+                <!-- 検索条件エリア -->
+                <div class="card mb-3 shadow-sm">
+                    <div class="card-header bg-primary text-white">
+                        <h5 class="mb-0">🔎 検索条件</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <label for="productName" class="form-label">商品名</label>
+                            <input type="text" id="productName" th:field="*{productName}" class="form-control" placeholder="商品名で検索（部分一致）">
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="productCode" class="form-label">商品コード</label>
+                            <input type="text" id="productCode" th:field="*{productCode}" class="form-control" placeholder="商品コードで検索（部分一致）">
+                        </div>
+
+                        <div class="d-flex gap-2">
+                            <button type="submit" class="btn btn-primary" th:formaction="@{/va0101/search}">検索</button>
+                            <button type="submit" class="btn btn-secondary" th:formaction="@{/va0101/clear}">クリア</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 検索結果エリア -->
+                <div th:if="${products != null}" class="card shadow-sm">
+                    <div class="card-header bg-success text-white">
+                        <h5 class="mb-0">📊 検索結果</h5>
+                    </div>
+                    <div class="card-body">
+                        <!-- 
+                          テーブルコンポーネント:
+                          - table-responsive: 小画面で横スクロール可能にする
+                          - table: テーブルの基本スタイル
+                          - table-striped: 縞模様（行ごとに背景色が交互）
+                          - table-hover: ホバー時に行の背景色を変更
+                          - table-dark: ヘッダー部分を暗い背景色に設定
+                        -->
+                        <div class="table-responsive">
+                            <table class="table table-striped table-hover">
+                                <thead class="table-dark">
+                                    <tr>
+                                        <th style="width: 50px;">
+                                            <input type="checkbox" 
+                                                   id="selectAll" 
+                                                   class="form-check-input" 
+                                                   data-toggle-all="true" 
+                                                   data-toggle-target=".product-checkbox" 
+                                                   onclick="toggleAll(this)" 
+                                                   onkeyup="if(event.key==='Enter'||event.key===' '){toggleAll(this)}">
+                                        </th>
+                                        <th>商品コード</th>
+                                        <th>商品名</th>
+                                        <th>販売会社</th>
+                                        <th class="text-end">価格（税込）</th>
+                                        <th class="text-end">在庫数</th>
+                                        <th>説明</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <!-- 
+                                      テキストユーティリティクラス:
+                                      - text-center: テキストを中央揃え
+                                      - text-muted: テキスト色をグレー（控えめな色）に設定
+                                      - text-end: テキストを右揃え（数値表示用）
+                                    -->
+                                    <tr th:if="${#lists.isEmpty(products)}">
+                                        <td colspan="7" class="text-center text-muted">検索結果がありません</td>
+                                    </tr>
+                                    <tr th:each="product : ${products}">
+                                        <td class="text-center">
+                                            <input type="checkbox" name="selectedProductIds" th:value="${product.productId}" class="form-check-input product-checkbox">
+                                        </td>
+                                        <td>
+                                            <a th:href="@{/va0102(id=${product.productId})}" th:text="${product.productCode}"></a>
+                                        </td>
+                                        <td th:text="${product.productName}"></td>
+                                        <td th:text="${product.salesCompanyName}"></td>
+                                        <td class="text-end" th:text="${#numbers.formatDecimal(product.price, 1, 0)} + '円'"></td>
+                                        <td class="text-end" th:text="${product.stockQuantity}"></td>
+                                        <td th:text="${product.description}"></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div th:if="${!#lists.isEmpty(products)}" class="mt-3">
+                            <button type="submit" 
+                                    id="addToCartBtn" 
+                                    class="btn btn-success" 
+                                    th:formaction="@{/va0101/addToCart}"
+                                    data-button-enable="true" 
+                                    data-checkbox-group=".product-checkbox" 
+                                    disabled>カートに追加</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
         </div>
     </body>
 </html>

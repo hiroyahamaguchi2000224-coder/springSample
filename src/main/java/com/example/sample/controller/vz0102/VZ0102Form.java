@@ -5,14 +5,13 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * VZ0102 メニュー画面用フォーム
+ * VZ0102 - メニュー画面のフォームクラス。
  */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class VZ0102Form {
-    /**
-     * メニュー選択時のアクション名
-     */
-    private String menuAction;
+    
+    /** ログインユーザー名 */
+    private String userName;
 }

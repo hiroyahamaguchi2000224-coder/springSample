@@ -2,20 +2,21 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.example.sample.mapper.AccountMapper">
+<mapper namespace="com.example.sample.db.mybatis.account.AccountMapper">
 
-    <!-- 指定したユーザーIDに対応する Account を取得 -->
-    <select id="findByUserId" resultType="com.example.sample.entity.Account">
+    <!-- 指定したユーザーIDに対応する AccountMapping を取得 -->
+    <select id="findByUserId" resultType="com.example.sample.db.mybatis.account.AccountMapping">
         SELECT
-            id,
-            user_id AS userId,
-            password,
-            user_name AS userName,
-            role
+            USER_ID AS userId,
+            PASSWORD AS password,
+            USER_NAME AS userName,
+            ROLE AS role,
+            DEL_FLG AS delFlg,
+            ACCOUNT_LOCKED AS accountLocked
         FROM
-            account
+            SAMPLE.TM_USER
         WHERE
-            user_id = #{userId}
+            USER_ID = #{userId}
     </select>
 
 </mapper>

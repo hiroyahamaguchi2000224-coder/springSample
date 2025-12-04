@@ -1,0 +1,14 @@
+<div xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security" th:fragment="header-dev">
+  <nav class="navbar navbar-expand-lg navbar-dark bg-success sticky-top">
+    <div class="container-fluid">
+      <span class="navbar-brand mb-0 h1">🔧 開発・デバッグモード</span>
+      <div class="d-flex align-items-center gap-3" sec:authorize="isAuthenticated()">
+        <span class="text-white" sec:authentication="name">ユーザー名</span>
+        <span class="text-white" th:text="${#temporals.format(#temporals.createNow(), 'yyyy/MM/dd HH:mm')}">2025/12/04 00:00</span>
+        <form th:action="@{/logout}" method="post" class="d-inline">
+          <button type="submit" class="btn btn-danger btn-sm">ログアウト</button>
+        </form>
+      </div>
+    </div>
+  </nav>
+</div>

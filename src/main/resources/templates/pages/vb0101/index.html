@@ -1,43 +1,50 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="ja" th:replace="layout/main :: layout">
-  <head>
-    <title th:fragment="title">VB機能 - VB0101</title>
-  </head>
-  <body>
-    <div th:fragment="content">
-      <section class="page-header">
-        <h1>VB0101 - VB機能</h1>
-      </section>
-
-      <div class="container">
-        <div class="content-box">
-          <h2>VB0101処理画面</h2>
-
-          <div th:if="${error}" class="error-message">
-            <p th:text="${error}"></p>
-          </div>
-
-          <div th:if="${message}" class="message">
-            <p th:text="${message}"></p>
-          </div>
-
-          <p style="color: #666; margin-bottom: 20px;">
-            ユーザー: <strong th:text="${userName}"></strong>
-          </p>
-
-          <form th:action="@{/vb0101/execute}" method="post" th:object="${vB0101Form}">
-            <div class="form-group">
-              <label for="parameter">パラメータ</label>
-              <input type="text" id="parameter" th:field="*{parameter}" required placeholder="処理パラメータを入力してください">
-            </div>
-
-            <div class="button-group">
-              <button type="submit">実行</button>
-              <button type="reset">クリア</button>
-            </div>
-          </form>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/main}" lang="ja">
+<head>
+    <title>VB0101 - VB業務処理</title>
+</head>
+<body>
+    <div layout:fragment="content">
+      <!-- 1画面1フォーム: 全体をフォームで囲む -->
+      <form id="vb0101Form" th:object="${vb0101Form}" method="post" th:action="@{/}">
+        <div class="mb-4">
+          <h1 class="mb-2">⚙️ VB業務処理</h1>
+          <p class="text-muted">パラメータを入力して業務処理を実行します。処理結果はメッセージで表示されます。</p>
         </div>
-      </div>
+
+        <div class="card shadow-sm">
+          <div class="card-header bg-info text-white">
+            <h5 class="mb-0">処理実行フォーム</h5>
+          </div>
+          <div class="card-body">
+            
+            <div th:if="${error}" class="alert alert-danger" role="alert">
+              <strong>⚠️ エラー:</strong> <span th:text="${error}"></span>
+            </div>
+
+            <div th:if="${message}" class="alert alert-success" role="alert">
+              <strong>✓ 成功:</strong> <span th:text="${message}"></span>
+            </div>
+
+            <div class="alert alert-light border" role="alert">
+              <strong>ログインユーザー:</strong> <span th:text="*{userName}" class="text-primary"></span>
+            </div>
+
+            <div class="mb-3">
+              <label for="parameter" class="form-label">処理パラメータ <span class="text-danger">*</span></label>
+              <input type="text" id="parameter" th:field="*{parameter}" class="form-control" required placeholder="処理パラメータを入力してください">
+              <div class="form-text">業務処理に必要なパラメータを入力してください。</div>
+            </div>
+
+            <div class="d-flex gap-2">
+              <button type="submit" class="btn btn-primary" th:formaction="@{/vb0101/execute}">▶️ 実行</button>
+              <button type="submit" class="btn btn-secondary" th:formaction="@{/vb0101/clear}">🔄 クリア</button>
+            </div>
+          </div>
+        </div>
+      </form>
     </div>
   </body>
 </html>

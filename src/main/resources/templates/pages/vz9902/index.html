@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/main}" lang="ja">
+<head>
+  <title>モックアップ画面 - VZ9902</title>
+</head>
+<body>
+  <div layout:fragment="content">
+    <div class="container" style="max-width: 1400px;">
+      <div class="my-4">
+        <h1 class="mb-2">🔍 モックアップ画面（デバッグ情報）</h1>
+        <p class="text-muted">開発・デバッグ用のリクエスト情報表示画面</p>
+      </div>
+      
+      <!-- リクエスト基本情報 -->
+      <div class="card mb-3 shadow-sm">
+        <div class="card-header bg-success text-white">
+          <h5 class="mb-0">📋 リクエスト基本情報</h5>
+        </div>
+        <div class="card-body" th:object="${vz9902Form}">
+          <div class="table-responsive">
+            <table class="table table-bordered">
+              <tr>
+                <th style="width: 30%;">HTTPメソッド</th>
+                <td>
+                  <span th:class="*{method == 'GET'} ? 'badge bg-success' : 'badge bg-primary'"
+                        th:text="*{method}">GET</span>
+                </td>
+              </tr>
+              <tr>
+                <th>リクエストURI</th>
+                <td th:text="*{requestURI}" class="text-break">/vz9902</td>
+              </tr>
+              <tr>
+                <th>クエリ文字列</th>
+                <td th:text="*{queryString} ?: '(なし)'" class="text-break">(なし)</td>
+              </tr>
+              <tr>
+                <th>セッションID</th>
+                <td th:text="*{sessionId}" class="text-break">XXXX-XXXX-XXXX</td>
+              </tr>
+            </table>
+          </div>
+        </div>
+      </div>
+      
+      <!-- セッション属性 -->
+      <div class="card mb-3 shadow-sm">
+        <div class="card-header bg-primary text-white">
+          <h5 class="mb-0">🗂️ セッション属性</h5>
+        </div>
+        <div class="card-body" th:object="${vz9902Form}">
+          <div th:if="*{sessionAttributes.isEmpty()}">
+            <p class="text-muted fst-italic">セッション属性は空です</p>
+          </div>
+          <div class="table-responsive" th:unless="*{sessionAttributes.isEmpty()}">
+            <table class="table table-bordered table-striped">
+              <thead class="table-dark">
+                <tr>
+                  <th style="width: 30%;">キー</th>
+                  <th>値</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr th:each="entry : *{sessionAttributes}">
+                  <td th:text="${entry.key}" class="text-break">key</td>
+                  <td th:text="${entry.value}" class="text-break">value</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      
+      <!-- リクエスト属性（Flash属性のみ） -->
+      <div class="card mb-3 shadow-sm">
+        <div class="card-header bg-warning text-dark">
+          <h5 class="mb-0">⚡ リクエスト属性（Flash属性のみ - PRGパターン）</h5>
+        </div>
+        <div class="card-body" th:object="${vz9902Form}">
+          <p class="text-muted small mb-3">
+            ※ PRG（Post-Redirect-Get）パターンでは、POST後にRedirectするため、リクエスト属性にはFlash属性のみが表示されます
+          </p>
+          <div th:if="${infoMessage}" class="alert alert-info" role="alert" th:text="${infoMessage}"></div>
+          <div th:if="*{flashAttributes == null or flashAttributes.isEmpty()}">
+            <p class="text-muted fst-italic">Flash属性は空です（POST送信後にのみ表示されます）</p>
+          </div>
+          <div class="table-responsive" th:unless="*{flashAttributes == null or flashAttributes.isEmpty()}">
+            <table class="table table-bordered table-striped">
+              <thead class="table-dark">
+                <tr>
+                  <th style="width: 30%;">キー</th>
+                  <th>値</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr th:each="entry : *{flashAttributes}">
+                  <td th:text="${entry.key}" class="text-break">key</td>
+                  <td th:text="${entry.value}" class="text-break">value</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      
+      <!-- POSTされたパラメータ（Flash属性経由） -->
+      <div class="card mb-3 shadow-sm" th:if="${postedParams != null}">
+        <div class="card-header bg-info text-white">
+          <h5 class="mb-0">📩 POSTされたパラメータ（Flash属性経由）</h5>
+        </div>
+        <div class="card-body">
+          <div class="table-responsive">
+            <table class="table table-bordered table-striped">
+              <thead class="table-dark">
+                <tr>
+                  <th style="width: 30%;">パラメータ名</th>
+                  <th>値</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr th:each="entry : ${postedParams}">
+                  <td th:text="${entry.key}" class="text-break">param</td>
+                  <td th:text="${entry.value}" class="text-break">value</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      
+      <!-- リクエストパラメータ -->
+      <div class="card mb-3 shadow-sm">
+        <div class="card-header bg-secondary text-white">
+          <h5 class="mb-0">📝 リクエストパラメータ（GETクエリ文字列）</h5>
+        </div>
+        <div class="card-body" th:object="${vz9902Form}">
+          <p class="text-muted small mb-3">
+            ※ GET送信時のクエリパラメータのみ表示されます。POST送信のパラメータはFlash属性経由で上部に表示されます
+          </p>
+          <div th:if="*{requestParams.isEmpty()}">
+            <p class="text-muted fst-italic">GETクエリパラメータは空です</p>
+          </div>
+          <div class="table-responsive" th:unless="*{requestParams.isEmpty()}">
+            <table class="table table-bordered table-striped">
+              <thead class="table-dark">
+                <tr>
+                  <th style="width: 30%;">パラメータ名</th>
+                  <th>値</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr th:each="entry : *{requestParams}">
+                  <td th:text="${entry.key}" class="text-break">param</td>
+                  <td th:text="${entry.value}" class="text-break">value</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      
+      <!-- HTTPヘッダー -->
+      <div class="card mb-3 shadow-sm">
+        <div class="card-header bg-dark text-white">
+          <h5 class="mb-0">📡 HTTPヘッダー</h5>
+        </div>
+        <div class="card-body" th:object="${vz9902Form}">
+          <div class="table-responsive">
+            <table class="table table-bordered table-striped table-sm">
+              <thead class="table-dark">
+                <tr>
+                  <th style="width: 30%;">ヘッダー名</th>
+                  <th>値</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr th:each="entry : *{headers}">
+                  <td th:text="${entry.key}" class="text-break">header</td>
+                  <td th:text="${entry.value}" class="text-break small">value</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      
+      <!-- テストフォーム -->
+      <div class="card mb-3 shadow-sm">
+        <div class="card-header bg-success text-white">
+          <h5 class="mb-0">🧪 テスト送信フォーム</h5>
+        </div>
+        <div class="card-body">
+          <form id="vz9902Form" method="post" th:action="@{/}">
+            <div class="mb-3">
+              <label for="testParam1" class="form-label">テストパラメータ1</label>
+              <input type="text" id="testParam1" name="testParam1" class="form-control" value="テスト値1">
+            </div>
+            <div class="mb-3">
+              <label for="testParam2" class="form-label">テストパラメータ2</label>
+              <input type="text" id="testParam2" name="testParam2" class="form-control" value="テスト値2">
+            </div>
+            <div class="mb-3 form-check">
+              <input type="checkbox" id="testCheck" name="testCheck" class="form-check-input" value="checked">
+              <label for="testCheck" class="form-check-label">テストチェック</label>
+            </div>
+            <button type="submit" class="btn btn-primary" th:formaction="@{/vz9902}">POST送信テスト</button>
+          </form>
+        </div>
+      </div>
+      
+      <!-- ナビゲーション -->
+      <div class="d-flex gap-2 mb-4">
+        <form id="navForm" method="post" th:action="@{/}" class="d-flex gap-2">
+          <button type="submit" class="btn btn-secondary" th:formaction="@{/vz9901}">← ドライバ画面に戻る</button>
+          <button type="submit" class="btn btn-secondary" th:formaction="@{/vz0102}">メニュー画面に戻る</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

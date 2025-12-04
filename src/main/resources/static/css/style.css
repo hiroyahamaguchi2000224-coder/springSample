@@ -1,98 +1,22 @@
-/* Common styles for the application (extracted from templates)
-   Placed under src/main/resources/static so it's served as /style.css
-*/
+/* 
+ * Bootstrap 5をベースとするため、カスタムCSSは最小限に抑えています。
+ * 各画面でBootstrapユーティリティクラスを活用してください。
+ */
 
-/* Reset / base */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+/* グローバル設定 */
+html,
+body {
+    width: 100%;
+    height: 100%;
+    min-height: 100vh;
 }
+
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     background-color: #f5f5f5;
-    min-height: 100vh;
-    color: #333;
 }
 
-/* Header */
-header {
-    background-color: #2c3e50;
-    color: white;
-    padding: 20px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+/* ログイン画面専用の背景 */
+body.login-page {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
 }
-header h1 { font-size: 24px; }
-.header-buttons { display:flex; gap:10px; }
-
-/* Buttons */
-a, button {
-    text-decoration: none;
-    color: white;
-    padding: 8px 16px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 14px;
-    transition: background-color 0.3s;
-}
-.btn-menu { background-color: #3498db; }
-.btn-menu:hover { background-color: #2980b9; }
-.btn-logout { background-color: #e74c3c; }
-.btn-logout:hover { background-color: #c0392b; }
-
-.logout-btn { background-color: #e74c3c; }
-.logout-btn:hover { background-color: #c0392b; }
-
-/* Containers */
-.container { max-width: 1200px; margin: 30px auto; padding: 20px; }
-.content-box { background: white; border-radius:8px; box-shadow:0 2px 8px rgba(0,0,0,0.1); padding:30px; }
-
-/* Login specific */
-.login-container {
-    background: white;
-    border-radius: 10px;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
-    padding: 40px;
-    width: 100%;
-    max-width: 400px;
-}
-.form-group { margin-bottom: 20px; }
-label { display:block; margin-bottom:8px; color:#555; font-weight:500; }
-input[type="text"], input[type="password"], textarea {
-    width:100%; padding:12px; border:1px solid #ddd; border-radius:5px; font-size:14px; transition:border-color .3s;
-}
-input:focus, textarea:focus { outline:none; border-color:#667eea; box-shadow:0 0 5px rgba(102,126,234,0.3); }
-button[type="submit"], button[type="reset"] { padding:12px 24px; border-radius:5px; }
-button[type="submit"] { background-color:#27ae60; font-weight:bold; }
-button[type="submit"]:hover { background-color:#229954; }
-button[type="reset"] { background-color:#95a5a6; }
-button[type="reset"]:hover { background-color:#7f8c8d; }
-
-.message { background-color:#d4edda; color:#155724; padding:12px; border-radius:5px; margin-bottom:20px; border-left:4px solid #28a745; }
-.error-message { color:#d32f2f; padding:12px; background:#ffebee; border-radius:5px; margin-bottom:20px; border-left:4px solid #d32f2f; }
-
-/* Menu card */
-.menu-grid { display:grid; grid-template-columns: repeat(auto-fit, minmax(300px,1fr)); gap:20px; }
-.menu-card { background:white; border-radius:8px; box-shadow:0 2px 8px rgba(0,0,0,0.1); overflow:hidden; transition:transform .3s, box-shadow .3s; }
-.menu-card:hover { transform:translateY(-5px); box-shadow:0 5px 15px rgba(0,0,0,0.2); }
-.menu-card-header { background-color:#667eea; color:white; padding:15px; }
-.menu-card-body { padding:15px; text-align:center; }
-.menu-card-button { display:inline-block; background-color:#667eea; color:white; padding:10px 20px; border-radius:5px; }
-.menu-card-button:hover { background-color:#764ba2; }
-
-/* Error page */
-.error-box { background:white; border-radius:8px; box-shadow:0 2px 8px rgba(0,0,0,0.1); overflow:hidden; }
-.error-header { background-color:#d32f2f; color:white; padding:20px; text-align:center; }
-.error-header h2 { font-size:32px; margin-bottom:10px; }
-.error-body { padding:30px; }
-.error-code { color:#d32f2f; font-weight:bold; }
-.error-detail strong { color:#2c3e50; }
-.error-time { color:#666; font-size:14px; }
-.detail-message { background-color:#f5f5f5; border-left:4px solid #d32f2f; padding:10px; margin-top:10px; font-size:12px; color:#666; word-break:break-all; }
-
-/* Utility */
-.hidden { display:none; }

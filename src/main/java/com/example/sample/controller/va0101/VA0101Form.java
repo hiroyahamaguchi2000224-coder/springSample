@@ -12,7 +12,12 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class VA0101Form {
     /**
-     * ユーザー入力パラメータ
+     * 商品名（検索条件）
      */
-    private String parameter;
+    private String productName;
+    
+    /**
+     * 商品コード（検索条件）
+     */
+    private String productCode;
 }
